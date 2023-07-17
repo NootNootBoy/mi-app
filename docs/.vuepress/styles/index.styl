@@ -1,0 +1,155 @@
+.navbar {
+  display: flex
+
+  .home-link {
+    display: flex
+    align-items: center
+    padding-left: 1rem
+
+    .logo {
+      height: 2rem
+      min-width: 1.375rem
+      margin-right: 0.5rem
+    }
+    .site-name {
+      line-height: 1
+      font-weight: 700
+      font-size: 1.75rem
+      margin-bottom: 0.2rem
+      letter-spacing: -0.45px
+      text-transform: lowercase
+      color: rgba(50, 71, 92, 0.87)
+    }
+  }
+
+  .links {
+    right: 6rem !important
+
+    .search-box {
+      margin-left: 2rem
+      input {
+        width: 13rem
+        margin-left: 1rem
+      }
+    }
+  }
+}
+
+[href="https://themeselection.com/item/sneat-mui-react-nextjs-admin-template"] {
+  border-radius: 4px;
+  padding: 0.4rem 0.7rem;
+  color: #FFF  !important;
+  background-color: $accentColor;
+
+  svg {
+    color: #FFF !important;
+  }
+}
+
+main.home header.hero img {
+  height: 4rem
+  width: 2.75rem
+}
+
+.sidebar-group {
+  &.is-sub-group > .sidebar-heading:not(.clickable) {
+    opacity: unset !important
+  }
+  &:not(.collapsable) {
+    .sidebar-heading:not(.clickable) {
+      color: rgba(136,153,168,1.00) !important
+      font-weight: 500
+    }
+  }
+  .sidebar-group {
+    &.is-sub-group {
+      margin-bottom: 0
+      .sidebar-heading:not(.clickable) {
+        color: #3b454e !important
+        text-transform: none
+        letter-spacing: inherit
+        display: flex;
+        justify-content: space-between
+        align-items: center
+        padding-left: 1rem
+        &:hover {
+          background-color: #e6ecf1
+        }
+      }
+    }
+    .sidebar-heading {
+      cursor: pointer !important
+    }
+  }
+} 
+
+.sidebar-links a.sidebar-link {
+  font-size: 0.875rem
+
+  &.active{
+    &:hover {
+      color: $accentColor
+      background-color: #FFF !important
+    }
+  }
+}
+
+.row {
+  display: flex
+  flex-wrap: wrap
+  align-items: start
+  margin-left: -1.5rem
+  box-sizing: border-box
+
+  * {
+    box-sizing: border-box
+  }
+
+  .col {
+    flex-grow: 0
+    max-width: 100%
+    flex-basis: 100%
+    padding-top: 1.5rem
+    padding-left: 1.5rem
+
+    > a {
+      color: inherit
+      font-weight: normal
+      &:hover {
+        text-decoration: none
+        a {
+          text-decoration: underline
+        }
+      }
+    }
+
+    .card {
+      padding: 1.5rem
+      border-radius: 6px
+      border: 1px solid #eaecef
+
+      > img {
+        margin-bottom: 0.5rem
+      }
+
+      p, h1, h2, h3, h4, h5, h6 {
+        margin-top: 0
+        margin-bottom: 0.75rem
+      }
+
+      .d-flex {
+        display: flex
+      }
+    }
+
+    @media (min-width: 900px) {
+      max-width: 50%
+      flex-basis: 50%
+    }
+
+    @media (min-width: 1200px) {
+      max-width: 33.333333%
+      flex-basis: 33.333333%
+    }
+  }
+}

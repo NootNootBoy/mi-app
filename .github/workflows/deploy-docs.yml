@@ -1,0 +1,79 @@
+name: 'Deploy - Documentation'
+run-name: ${{ inputs.is_production && '🚀' || '🧪' }} Deploy - Documentation
+
+on:
+  workflow_dispatch:
+    inputs:
+      is_production:
+        type: boolean
+        description: Is production deployment
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+
+    env:
+      DEPLOY_DIR: ${{ inputs.is_production && secrets.PROD_DIR || secrets.STAG_DIR }}
+      BASE: ${{ inputs.is_production && secrets.DOCS_BASE_PROD || secrets.DOCS_BASE_STAG }} # ❗ (For VuePress only) Don't forget the ending slash in base
+      TEMPLATE_NAME: sneat-mui-react-nextjs-admin-template
+
+    steps:
+      # Checkout current repo
+      - name: Checkout current repo
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.TEMPLATE_NAME }}
+
+      # Checkout automation-scripts repo
+      - name: Checkout automation-scripts repo
+        uses: actions/checkout@v3
+        with:
+          repository: themeselection/automation-scripts
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: automation-scripts
+
+      # Replace template name in automation-scripts
+      - name: Replace template name in automation-scripts
+        run: sh generate.sh ${{ env.TEMPLATE_NAME }}
+        working-directory: automation-scripts/react/replace-project-name
+
+      # Install packages in docs
+      - name: Install packages in docs
+        run: yarn
+        working-directory: ${{ env.TEMPLATE_NAME }}/docs
+
+      # Generate documentation
+      - name: Generate documentation
+        run: sh generate.sh $([[ "${{ inputs.is_production }}" != "true" ]] && echo staging)
+        working-directory: automation-scripts/react/pro/docs-generation
+
+      # Zip documentation & delete old documentation
+      - name: Cleanup documentation
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            mkdir -p ${{ env.DEPLOY_DIR }}
+            cd ${{ env.DEPLOY_DIR }}
+            rm -rf documentation-backup-*.zip
+            DOC_ZIP_NAME="documentation-backup-$(date +"%Y-%m-%d-%H-%M-%S").zip"
+            [[ "${{ inputs.is_production }}" == "true" ]] && rm -rf ${{ secrets.STAG_DIR }}/documentation && zip -r $DOC_ZIP_NAME documentation
+            rm -rf documentation
+
+      # Move documentation to github workspace directory
+      - name: Move documentation to github workspace directory
+        run: mv ${{ env.TEMPLATE_NAME }}/documentation $GITHUB_WORKSPACE
+
+      # Upload new documentation
+      - name: Upload new documentation
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          source: documentation
+          target: ${{ env.DEPLOY_DIR }}

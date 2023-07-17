@@ -1,0 +1,13 @@
+{
+  "name": "sneat-react-mui-nextjs-docs",
+  "private": true,
+  "scripts": {
+    "dev": "(export NODE_OPTIONS=--openssl-legacy-provider && vuepress dev || set NODE_OPTIONS=--openssl-legacy-provider && vuepress dev)",
+    "build": "(export NODE_OPTIONS=--openssl-legacy-provider && vuepress build || set NODE_OPTIONS=--openssl-legacy-provider && vuepress build)"
+  },
+  "devDependencies": {
+    "vuepress": "^1.8.2",
+    "@vuepress/plugin-back-to-top": "^1.9.7",
+    "@vuepress/plugin-medium-zoom": "^1.9.7"
+  }
+}
